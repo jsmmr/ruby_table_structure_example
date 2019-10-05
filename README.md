@@ -1,0 +1,1 @@
+# ruby_table_structure_sample

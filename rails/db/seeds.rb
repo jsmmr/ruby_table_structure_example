@@ -72,20 +72,33 @@ questions = Question.all
 creatures = Creature.all
 answer_texts = ['⭕️', '❌']
 
+created_at = Time.zone.now
+updated_at = Time.zone.now
+
 1000.times do
   User.transaction do
     user = User.create!(name: Faker::Name.name)
-    questions.map do |question|
-      user.answers.create!(
+
+    answers = questions.map do |question|
+      {
+        user_id: user.id,
         question_id: question.id,
-        text: answer_texts.sample
-      )
+        text: answer_texts.sample,
+        created_at: created_at,
+        updated_at: updated_at
+      }
     end
-    creatures.sample(rand(10)).map do |creature|
-      user.pets.create!(
+    Answer.insert_all!(answers)
+
+    pets = creatures.sample(rand(0..10)).map do |creature|
+      {
+        user_id: user.id,
         creature_id: creature.id,
-        name: Faker::FunnyName.name
-      )
+        name: Faker::FunnyName.name,
+        created_at: created_at,
+        updated_at: updated_at
+      }
     end
+    Pet.insert_all!(pets) if pets.present?
   end
 end

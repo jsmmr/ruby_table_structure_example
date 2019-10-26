@@ -1,7 +1,7 @@
-class UserSchema
+class UserTableSchema
   include TableStructure::Schema
 
-  TableContext = Struct.new(:questions, keyword_init: true)
+  TableContext = Struct.new(:questions, :max_pet_num, keyword_init: true)
 
   context_builder :table, ->(context) { TableContext.new(**context) }
 
@@ -11,8 +11,12 @@ class UserSchema
   column  name: 'Name',
           value: ->(row, *) { row.name }
 
-  columns name: (1..5).map { |num| "Pet #{num}" },
-          value: ->(row, *) { row.pets.map { |pet| pet.creature.emoji } }
+  columns ->(table) {
+    {
+      name: (1..table.max_pet_num).map { |num| "Pet #{num}" },
+      value: ->(row, *) { row.pets.map { |pet| pet.creature.emoji } },
+    }
+  }
 
   columns ->(table) {
     table.questions.map.with_index do |question, i|

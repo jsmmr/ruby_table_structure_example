@@ -1,4 +1,4 @@
-class UserSchema
+class UserTableSchema
   include TableStructure::Schema
 
   TableContext = Struct.new(:questions, keyword_init: true)

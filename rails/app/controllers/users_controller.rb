@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    schema = UserSchema.new(context: { questions: Question.order(:id).all })
+    schema = UserTableSchema.new(context: { questions: Question.order(:id).all })
     users = User.includes(:answers, pets: :creature)
 
     respond_to do |format|

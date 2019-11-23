@@ -1,4 +1,6 @@
-# Sample of [TableStructure](https://github.com/jsmmr/ruby_table_structure) library
+# [TableStructure](https://github.com/jsmmr/ruby_table_structure) sample
+
+[![CircleCI](https://circleci.com/gh/jsmmr/ruby_table_structure_sample/tree/master.svg?style=svg)](https://circleci.com/gh/jsmmr/ruby_table_structure_sample/tree/master)
 
 ## Ruby on Rails
 

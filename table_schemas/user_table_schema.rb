@@ -1,7 +1,11 @@
 class UserTableSchema
   include TableStructure::Schema
 
-  TableContext = Struct.new(:questions, :max_pet_num, keyword_init: true)
+  TableContext = Struct.new(:questions, :pet_num, keyword_init: true) do
+    def output_pets?
+      pet_num.positive?
+    end
+  end
 
   context_builder :table, ->(context) { TableContext.new(**context) }
 
@@ -12,10 +16,12 @@ class UserTableSchema
           value: ->(row, *) { row.name }
 
   columns ->(table) {
-    {
-      name: (1..table.max_pet_num).map { |num| "Pet #{num}" },
-      value: ->(row, *) { row.pets.map { |pet| pet.creature.emoji } },
-    }
+    if table.output_pets?
+      {
+        name: (1..table.pet_num).map { |num| "Pet #{num}" },
+        value: ->(row, *) { row.pets.map { |pet| pet.creature.emoji } },
+      }
+    end
   }
 
   columns ->(table) {

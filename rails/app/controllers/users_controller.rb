@@ -3,8 +3,9 @@ class UsersController < ApplicationController
     schema = UserTableSchema.new(
       context: {
         questions: Question.order(:id).all,
-        max_pet_num: 5
-      }
+        pet_num: (params[:pet_num] || 5).to_i
+      },
+      nil_definitions_ignored: true
     )
     users = User.includes(:answers, pets: :creature)
 

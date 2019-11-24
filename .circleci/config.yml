@@ -3,7 +3,6 @@ jobs:
   build:
     machine:
       image: circleci/classic:edge
-    working_directory: ~/repo
     steps:
       - checkout
       - run:
@@ -19,10 +18,28 @@ jobs:
             curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - restore_cache:
+          keys:
+            - docker-v3-{{ checksum "docker-compose.yml" }}-{{ checksum "Dockerfile" }}
+          paths:
+            - ~/caches/images.tar
       - run:
-          command: docker-compose build
+          name: Setup docker
+          command: |
+            set -x
+            if [ ! -f ~/caches/images.tar ]; then
+              docker-compose build
+              mkdir -p ~/caches
+              docker save table-structure-sample -o ~/caches/images.tar
+            else
+              docker load -i ~/caches/images.tar
+            fi
+      - save_cache:
+          key: docker-v3-{{ checksum "docker-compose.yml" }}-{{ checksum "Dockerfile" }}
+          paths:
+            - ~/caches/images.tar
       - run:
-          command: docker-compose run --rm rails bundle install
+          command: docker-compose run --rm rails bundle install --jobs=4
       - run:
           command: docker-compose run --rm rails yarn install
       - run:

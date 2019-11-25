@@ -27,6 +27,7 @@ jobs:
           name: Setup docker
           command: |
             set -x
+            docker-compose pull db
             if [ ! -f ~/caches/images.tar ]; then
               docker-compose build
               mkdir -p ~/caches

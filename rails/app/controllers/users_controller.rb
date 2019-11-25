@@ -13,7 +13,8 @@ class UsersController < ApplicationController
       format.csv do
         writer = TableStructure::CSV::Writer.new(schema)
         # items = users.order(:id).all
-        items = Enumerator.new { |y| users.find_each { |user| y << user } }
+        items = users.enum_for(:find_each)
+        # items = Enumerator.new { |y| users.find_each { |user| y << user } }
 
         self.response.headers['Cache-Control'] = 'no-cache'
         self.response.headers['Content-Type'] = 'text/csv'

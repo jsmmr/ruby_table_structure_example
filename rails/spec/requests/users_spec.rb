@@ -15,6 +15,13 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
+  it 'displays users list' do
+    get '/users'
+    expect(response.content_type).to eq('text/html; charset=utf-8')
+    expect(response).to have_http_status(:ok)
+    expect(response.body).not_to be_empty
+  end
+
   it 'outputs users CSV' do
     get '/users.csv'
     expect(response.content_type).to eq('text/csv')

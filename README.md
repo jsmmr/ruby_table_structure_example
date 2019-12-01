@@ -13,6 +13,11 @@ docker-compose run --rm rails rails db:reset
 docker-compose up rails
 ```
 
+HTML page:
+```sh
+curl http://localhost:3000/users
+```
+
 Streaming CSV download:
 ```sh
 curl http://localhost:3000/users.csv

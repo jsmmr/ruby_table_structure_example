@@ -16,6 +16,7 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrad
     truncate -s 0 /var/log/*log
 
 ENV LANG C.UTF-8
+ENV TZ UTC
 
 RUN gem update --system && gem install bundler
 

@@ -15,12 +15,12 @@ docker-compose up rails
 
 HTML page:
 ```sh
-curl http://localhost:3000/users
+[http://localhost:3000/users](http://localhost:3000/users)
 ```
 
 Streaming CSV download:
 ```sh
-curl http://localhost:3000/users.csv
+[http://localhost:3000/users.csv](http://localhost:3000/users.csv)
 ```
 
 If you want to insert more sample records:

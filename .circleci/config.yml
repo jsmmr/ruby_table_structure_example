@@ -44,7 +44,7 @@ jobs:
       - run:
           command: docker-compose run --rm rails yarn install
       - run:
-          command: docker-compose run --rm rails rails db:create db:schema:load --trace
+          command: docker-compose run --rm rails bin/rails db:create db:schema:load --trace
       - run:
           command: docker-compose up -d
       - run:

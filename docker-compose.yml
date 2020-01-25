@@ -13,7 +13,7 @@ services:
     <<: *app
     volumes:
       - ./rails:/app:cached
-      - ./table_schemas:/app/app/table_schemas:cached
+      - ./table_structures:/app/app/table_structures:cached
       - rails_cache:/app/tmp/cache
       - rails_node_modules:/app/node_modules
       - bundle:/usr/local/bundle

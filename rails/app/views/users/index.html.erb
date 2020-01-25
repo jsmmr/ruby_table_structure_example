@@ -1,4 +1,4 @@
-<% @schema.create_table(result_type: :array) do |table| %>
+<% @schema.create_table(row_type: :array) do |table| %>
   <table>
     <thead>
       <tr>
@@ -9,7 +9,7 @@
     </thead>
 
     <tbody>
-      <% table.rows(@items).each do |row| %>
+      <% table.body(@items).each do |row| %>
         <tr>
           <% row.each do |val| %>
             <td><%= val %></td>

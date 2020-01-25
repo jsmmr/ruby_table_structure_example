@@ -2,7 +2,7 @@
   "name": "app",
   "private": true,
   "dependencies": {
-    "@rails/ujs": "^6.0.0-alpha"
+    "@rails/ujs": "^6.0.0"
   },
   "version": "0.1.0"
 }

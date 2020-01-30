@@ -1,9 +1,9 @@
-<% @schema.create_table(row_type: :array) do |table| %>
+<% @schema.create_table(row_type: :hash) do |table| %>
   <table>
     <thead>
       <tr>
-        <% table.header.each do |val| %>
-          <th><%= val %></th>
+        <% table.header.each do |key, value| %>
+          <th class="<%= key %>"><%= value %></th>
         <% end %>
       </tr>
     </thead>
@@ -11,8 +11,8 @@
     <tbody>
       <% table.body(@items).each do |row| %>
         <tr>
-          <% row.each do |val| %>
-            <td><%= val %></td>
+          <% row.each do |key, value| %>
+            <td class="<%= key %>"><%= value %></td>
           <% end %>
         </tr>
       <% end %>

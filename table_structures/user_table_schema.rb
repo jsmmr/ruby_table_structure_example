@@ -10,15 +10,19 @@ class UserTableSchema
   context_builder :table, ->(context) { TableContext.new(**context) }
 
   column  name: 'ID',
+          key: :id,
           value: ->(row, *) { row.id }
 
   column  name: 'Name',
+          key: :name,
           value: ->(row, *) { row.name }
 
   columns ->(table) {
     if table.output_pets?
+      pets_range = 1..table.pet_num
       {
-        name: (1..table.pet_num).map { |num| "Pet #{num}" },
+        name: pets_range.map { |num| "Pet #{num}" },
+        key: pets_range.map { |num| :"pet#{num}" },
         value: ->(row, *) { row.pets.map { |pet| pet.creature.emoji } },
       }
     end
@@ -26,8 +30,10 @@ class UserTableSchema
 
   columns ->(table) {
     table.questions.map.with_index do |question, i|
+      num = i + 1
       {
-        name: "Q#{i + 1} (#{question.text})",
+        name: "Q#{num} (#{question.text})",
+        key: :"q#{num}",
         value: ->(row, *) {
           row
             .answers

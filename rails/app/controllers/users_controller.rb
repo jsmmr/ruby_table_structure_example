@@ -8,15 +8,15 @@ class UsersController < ApplicationController
       nil_definitions_ignored: true
     )
     users = User.includes(:answers, pets: :creature)
+    items = users.enum_for(:find_each)
 
     respond_to do |format|
       format.html do
         @schema = schema
-        @items = users.order(:id).all
+        @items = items
       end
       format.csv do
         writer = TableStructure::CSV::Writer.new(schema)
-        items = users.enum_for(:find_each)
 
         self.response.headers['Cache-Control'] = 'no-cache'
         self.response.headers['Content-Type'] = 'text/csv'

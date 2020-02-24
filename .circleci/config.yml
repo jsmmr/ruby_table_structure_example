@@ -1,17 +1,7 @@
-version: 2
-jobs:
-  build:
-    machine:
-      image: circleci/classic:edge
+version: 2.1
+commands:
+  setup_docker:
     steps:
-      - checkout
-      - run:
-          name: Setup dockerize
-          command: |
-            DOCKERIZE_VERSION=v0.6.1
-            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-            sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-            sudo rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
       - run:
           name: Install Docker Compose
           command: |
@@ -19,10 +9,9 @@ jobs:
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - restore_cache:
-          keys:
-            - docker-v3-{{ checksum "docker-compose.yml" }}-{{ checksum "Dockerfile" }}
+          key: docker-v3-{{ checksum "docker-compose.yml" }}-{{ checksum "Dockerfile" }}
           paths:
-            - ~/caches/images.tar
+              - ~/caches/images.tar
       - run:
           name: Setup docker
           command: |
@@ -39,30 +28,82 @@ jobs:
           key: docker-v3-{{ checksum "docker-compose.yml" }}-{{ checksum "Dockerfile" }}
           paths:
             - ~/caches/images.tar
+  setup_rails_bundle:
+    steps:
+      - restore_cache:
+          key: rails-bundle-v1-{{ checksum "rails/Gemfile.lock" }}
+          paths:
+            - ~/caches/bundle.tar
+      - run:
+          name: Restore bundle
+          command: |
+            set -x
+            if [ -f ~/caches/bundle.tar ]; then
+              docker run --rm --volumes-from project_rails_1 -v ~/caches:/tmp busybox tar xvf /tmp/bundle.tar
+            fi
       - run:
           command: docker-compose run --rm rails bundle install --jobs=4
       - run:
+          name: Backup bundle
+          command: |
+            set -x
+            if [ ! -f ~/caches/bundle.tar ]; then
+              docker run --rm --volumes-from project_rails_1 -v ~/caches:/tmp busybox tar cvf /tmp/bundle.tar /usr/local/bundle
+            fi
+      - save_cache:
+          key: rails-bundle-v1-{{ checksum "rails/Gemfile.lock" }}
+          paths:
+            - ~/caches/bundle.tar
+  setup_rails_node_modules:
+    steps:
+      - restore_cache:
+          key: rails-node-modules-v2-{{ checksum "rails/yarn.lock" }}
+          paths:
+            - ~/caches/rails_node_modules.tar
+      - run:
+          name: Restore Node modules
+          command: |
+            set -x
+            if [ -f ~/caches/rails_node_modules.tar ]; then
+              tar xvf ~/caches/rails_node_modules.tar
+            fi
+      - run:
           command: docker-compose run --rm rails yarn install
       - run:
-          command: docker-compose run --rm rails bin/rails db:create db:schema:load --trace
+          name: Backup Node modules
+          command: |
+            set -x
+            if [ ! -f ~/caches/rails_node_modules.tar ]; then
+              tar cvf ~/caches/rails_node_modules.tar ~/project/rails/node_modules
+            fi
+      - save_cache:
+          key: rails-node-modules-v2-{{ checksum "rails/yarn.lock" }}
+          paths:
+            - ~/caches/rails_node_modules.tar
+
+jobs:
+  build:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - checkout
+      - setup_docker
       - run:
           command: docker-compose up -d
+      - setup_rails_bundle
+      - setup_rails_node_modules
       - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          command: docker-compose run --rm rails bundle exec rails db:create db:schema:load RAILS_ENV=test --trace
       - run:
           name: Run RSpec for Rails
           command: |
-            mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob 'spec/**/*_spec.rb' | circleci tests split --split-by=timings)"
-            docker-compose exec rails bin/rspec --format progress \
+            docker-compose run --rm rails bundle exec rspec \
+                                                --format documentation \
                                                 --format RspecJunitFormatter \
-                                                --out /tmp/test-results/rspec.xml \
+                                                --out test-results/rspec/results.xml \
                                                 $TEST_FILES
+      - store_test_results:
+          path: ~/project/rails/test-results
       - run:
           command: docker-compose down
-      - store_test_results:
-          path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results

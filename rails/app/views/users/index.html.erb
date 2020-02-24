@@ -1,12 +1,14 @@
 <% @schema.create_table(row_type: :hash) do |table| %>
   <table>
-    <thead>
-      <tr>
-        <% table.header.each do |key, value| %>
-          <th class="<%= key %>"><%= value %></th>
-        <% end %>
-      </tr>
-    </thead>
+    <% if @header %>
+      <thead>
+        <tr>
+          <% table.header.each do |key, value| %>
+            <th class="<%= key %>"><%= value %></th>
+          <% end %>
+        </tr>
+      </thead>
+    <% end %>
 
     <tbody>
       <% table.body(@items).each do |row| %>

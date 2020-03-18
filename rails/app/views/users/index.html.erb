@@ -1,4 +1,4 @@
-<% @schema.create_table(row_type: :hash) do |table| %>
+<% TableStructure::Table.new(@schema, row_type: :hash) do |table| %>
   <table>
     <% if @header %>
       <thead>

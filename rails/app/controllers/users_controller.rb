@@ -27,6 +27,7 @@ class UsersController < ApplicationController
         self.response.headers['Cache-Control'] = 'no-cache'
         self.response.headers['Content-Type'] = 'text/csv'
         self.response.headers['Content-Disposition'] = 'attachment; filename="users.csv"'
+        self.response.headers['Last-Modified'] = Time.zone.now.ctime.to_s
         self.response_body = Enumerator.new { |y| writer.write(items, to: y, bom: true) } # Output BOM for Excel
       end
     end

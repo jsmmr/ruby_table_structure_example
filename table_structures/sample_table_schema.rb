@@ -3,15 +3,22 @@ class SampleTableSchema
 
   TableContext = Struct.new(:questions, :friend_num, :pet_num, keyword_init: true)
 
-  context_builder :table, ->(context) { TableContext.new(**context) }
+  context_builder :table do |context|
+    TableContext.new(**context)
+  end
 
   columns UserTableSchema
 
   columns ->(table) {
     table.friend_num.times.map do |n|
       UserTableSchema.new(
-        context: table, name_prefix: "Friend #{n + 1} ", key_prefix: "friend_#{n + 1}_") do
-        context_builder :row, ->(context) { context.friend_users[n] }
+        context: table,
+        name_prefix: "Friend #{n + 1} ",
+        key_prefix: "friend_#{n + 1}_"
+      ) do
+        context_builder :row do |context|
+          context.friend_users[n]
+        end
       end
     end
   }
@@ -28,10 +35,10 @@ class SampleTableSchema
 
   columns ->(table) {
     table.questions.map.with_index do |question, i|
-      num = i + 1
+      n = i + 1
       {
-        name: "Q#{num} (#{question.text})",
-        key: :"q#{num}",
+        name: "Q#{n} (#{question.text})",
+        key: :"q#{n}",
         value: ->(row, *) {
           row
             .answers
@@ -42,5 +49,7 @@ class SampleTableSchema
     end
   }
 
-  column_converter :to_s, ->(val, *) { val.to_s }
+  column_converter :to_s do |val, *|
+    val.to_s
+  end
 end

@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
   def index
-    schema = UserTableSchema.new(
+    schema = SampleTableSchema.new(
       context: {
         questions: Question.order(:id).all,
+        friend_num: (params[:friend_num] || 2).to_i,
         pet_num: (params[:pet_num] || 5).to_i
       },
       nil_definitions_ignored: true
@@ -12,7 +13,7 @@ class UsersController < ApplicationController
 
     items =
       User
-      .includes(:answers, pets: :creature)
+      .includes(:friend_users, :answers, pets: :creature)
       .enum_for(:find_each)
 
     respond_to do |format|

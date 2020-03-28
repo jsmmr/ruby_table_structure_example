@@ -9,6 +9,8 @@
 #
 
 class User < ApplicationRecord
+  has_many :friends
+  has_many :friend_users, through: :friends, class_name: 'User'
   has_many :answers
   has_many :pets
 end

@@ -79,6 +79,31 @@ updated_at = Time.zone.now
   User.transaction do
     user = User.create!(name: Faker::Name.name)
 
+    if [true, false].sample
+      friend_user_id =
+        User
+        .where.not(id: user.id)
+        .pluck(:id)
+        .sample(1)
+        .shift
+
+      friends = [
+        {
+          user_id: user.id,
+          friend_user_id: friend_user_id,
+          created_at: created_at,
+          updated_at: updated_at
+        },
+        {
+          user_id: friend_user_id,
+          friend_user_id: user.id,
+          created_at: created_at,
+          updated_at: updated_at
+        }
+      ]
+      Friend.insert_all!(friends)
+    end
+
     answers = questions.map do |question|
       {
         user_id: user.id,

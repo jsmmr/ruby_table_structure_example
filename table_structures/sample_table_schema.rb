@@ -10,14 +10,14 @@ class SampleTableSchema
   columns UserTableSchema
 
   columns ->(table) {
-    table.friend_num.times.map do |n|
+    table.friend_num.times.map do |i|
       UserTableSchema.new(
         context: table,
-        name_prefix: "Friend #{n + 1} ",
-        key_prefix: "friend_#{n + 1}_"
+        name_prefix: "Friend #{i + 1} ",
+        key_prefix: "friend_#{i + 1}_"
       ) do
         context_builder :row do |context|
-          context.friend_users[n]
+          context.friend_users[i]
         end
       end
     end
@@ -25,20 +25,21 @@ class SampleTableSchema
 
   columns ->(table) {
     if table.pet_num.positive?
-      {
-        name: table.pet_num.times.map { |n| "Pet #{n + 1}" },
-        key: table.pet_num.times.map { |n| :"pet#{n + 1}" },
-        value: ->(row, *) { row.pets.map { |pet| pet.creature.emoji } },
-      }
+      table.pet_num.times.map do |i|
+        {
+          name: "Pet #{i + 1}",
+          key: :"pet#{i + 1}",
+          value: ->(row, *) { row.pets[i]&.then { |pet| pet.creature.emoji } }
+        }
+      end
     end
   }
 
   columns ->(table) {
     table.questions.map.with_index do |question, i|
-      n = i + 1
       {
-        name: "Q#{n} (#{question.text})",
-        key: :"q#{n}",
+        name: "Q#{i + 1} (#{question.text})",
+        key: :"q#{i + 1}",
         value: ->(row, *) {
           row
             .answers

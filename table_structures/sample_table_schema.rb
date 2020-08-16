@@ -9,7 +9,7 @@ class SampleTableSchema
 
   columns UserTableSchema
 
-  columns ->(table) {
+  columns do |table|
     table.friend_num.times.map do |i|
       UserTableSchema.new(
         context: table,
@@ -21,9 +21,9 @@ class SampleTableSchema
         end
       end
     end
-  }
+  end
 
-  columns ->(table) {
+  columns do |table|
     if table.pet_num.positive?
       table.pet_num.times.map do |i|
         {
@@ -33,9 +33,9 @@ class SampleTableSchema
         }
       end
     end
-  }
+  end
 
-  columns ->(table) {
+  columns do |table|
     table.questions.map.with_index do |question, i|
       {
         name: "Q#{i + 1} (#{question.text})",
@@ -48,9 +48,5 @@ class SampleTableSchema
         }
       }
     end
-  }
-
-  column_converter :to_s do |val, *|
-    val.to_s
   end
 end

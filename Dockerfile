@@ -1,4 +1,4 @@
-FROM ruby:2.6.6-buster
+FROM ruby:2.7.2-buster
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 

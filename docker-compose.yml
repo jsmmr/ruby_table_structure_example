@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: table-structure-sample:0.0.3
+    image: table-structure-sample:0.0.4
     tmpfs:
       - /tmp
 

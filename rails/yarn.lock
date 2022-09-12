@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@rails/ujs@^6.1.6-4":
-  version "6.1.4-6"
-  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.4-6.tgz#244520a1580b5791cebc81471978bc6b3c8966c0"
-  integrity sha512-j2ejw0ShVHiDWtq1Yv1PGX/GFCDiXX+5YiUY2Z17eeMJhQkxXeg3maQZkkT5OT/YBOI+jiWqtp03GM1Hdp/arA==
+"@rails/ujs@^6.1.7":
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.7.tgz#b09dc5b2105dd267e8374c47e4490240451dc7f6"
+  integrity sha512-0e7WQ4LE/+LEfW2zfAw9ppsB6A8RmxbdAUPAF++UT80epY+7emuQDkKXmaK0a9lp6An50RvzezI0cIQjp1A58w==

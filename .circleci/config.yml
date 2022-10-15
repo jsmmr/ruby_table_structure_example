@@ -83,8 +83,7 @@ commands:
 
 jobs:
   build:
-    machine:
-      image: circleci/classic:edge
+    machine: true
     steps:
       - checkout
       - setup_docker

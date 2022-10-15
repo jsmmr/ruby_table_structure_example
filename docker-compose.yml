@@ -11,6 +11,7 @@ services:
 
   rails:
     <<: *app
+    container_name: table-structure-rails
     volumes:
       - ./rails:/app:cached
       - ./table_structures:/app/app/table_structures:cached
@@ -25,6 +26,7 @@ services:
 
   db:
     image: mysql:8
+    container_name: table-structure-db
     volumes:
       - mysql:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d

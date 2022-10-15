@@ -1,6 +1,6 @@
-# [TableStructure](https://github.com/jsmmr/ruby_table_structure) sample
+# [TableStructure](https://github.com/jsmmr/ruby_table_structure) example
 
-[![CircleCI](https://circleci.com/gh/jsmmr/ruby_table_structure_sample/tree/master.svg?style=svg)](https://circleci.com/gh/jsmmr/ruby_table_structure_sample/tree/master)
+[![CircleCI](https://circleci.com/gh/jsmmr/ruby_table_structure_example/tree/master.svg?style=svg)](https://circleci.com/gh/jsmmr/ruby_table_structure_example/tree/master)
 
 ## Ruby on Rails
 

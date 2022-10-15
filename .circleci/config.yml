@@ -2,12 +2,6 @@ version: 2.1
 commands:
   setup_docker:
     steps:
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.28.5/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - restore_cache:
           key: docker-v3-{{ checksum "docker-compose.yml" }}-{{ checksum "Dockerfile" }}
           paths:

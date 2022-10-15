@@ -33,7 +33,7 @@ commands:
           command: |
             set -x
             if [ -f ~/caches/bundle.tar ]; then
-              docker run --rm --volumes-from project_rails_1 -v ~/caches:/tmp busybox tar xvf /tmp/bundle.tar
+              docker run --rm --volumes-from table-structure-rails -v ~/caches:/tmp busybox tar xvf /tmp/bundle.tar
             fi
       - run:
           command: docker-compose run --rm rails bundle install --jobs=4
@@ -42,7 +42,7 @@ commands:
           command: |
             set -x
             if [ ! -f ~/caches/bundle.tar ]; then
-              docker run --rm --volumes-from project_rails_1 -v ~/caches:/tmp busybox tar cvf /tmp/bundle.tar /usr/local/bundle
+              docker run --rm --volumes-from table-structure-rails -v ~/caches:/tmp busybox tar cvf /tmp/bundle.tar /usr/local/bundle
             fi
       - save_cache:
           key: rails-bundle-v1-{{ checksum "rails/Gemfile.lock" }}
